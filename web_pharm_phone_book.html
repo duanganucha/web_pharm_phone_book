@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Name List</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <style>
+    .container {
+      margin-top: 50px;
+    }
+
+    .loader {
+      display: none;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <h2><i class="fas fa-user-md"></i> Pharm Telemed List</h2>
+    <input type="text" id="searchBox" class="form-control" placeholder="ค้นหาจากชื่อและเบอร์โทร" oninput="search()">
+    <ul id="nameList" class="list-group mt-3"></ul>
+    <div id="loader" class="loader">
+      <img src="loader.gif" alt="Loading...">
+    </div>
+  </div>
+
+  <script>
+    function showLoader() {
+      document.getElementById("loader").style.display = "block";
+    }
+
+    function hideLoader() {
+      document.getElementById("loader").style.display = "none";
+    }
+
+    function search() {
+      var input, filter, ul, li, a, i, txtValue;
+      input = document.getElementById('searchBox');
+      filter = input.value.toUpperCase();
+      ul = document.getElementById("nameList");
+      li = ul.getElementsByTagName('li');
+
+      for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName("a")[0];
+        txtValue = a.textContent || a.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          li[i].style.display = "";
+        } else {
+          li[i].style.display = "none";
+        }
+      }
+    }
+
+    // Fetch data from the API and populate the name list
+    showLoader();
+    fetch('https://script.google.com/macros/s/AKfycbxBGJy0ui9QvP8uEap7QlS4slZpvRQrWgsy_lf1ebzgYpuBawxltth_1RWlkrfmH0mjrw/exec')
+      .then(response => response.json())
+      .then(data => {
+        var nameList = document.getElementById("nameList");
+
+        data.forEach(item => {
+          var li = document.createElement("li");
+          li.className = "list-group-item";
+
+          var a = document.createElement("a");
+          a.href = "tel:" + item.โทรศัพท์;
+
+          var icon = document.createElement("i");
+          icon.className = "fa fa-phone";
+          icon.setAttribute("aria-hidden", "true");
+
+          var namePhone = document.createElement("span");
+          namePhone.textContent = item.ชื่อสกุล + " - " + item.โทรศัพท์;
+
+          var address = document.createElement("p");
+          address.textContent = "ที่อยู่: " + item.ที่อยู่;
+
+          var clinic = document.createElement("p");
+          clinic.textContent = "คลินิก: " + item.คลินิก;
+
+          a.appendChild(icon);
+          a.appendChild(namePhone);
+          li.appendChild(a);
+          li.appendChild(address);
+          li.appendChild(clinic);
+          nameList.appendChild(li);
+        });
+
+
+
+        hideLoader();
+      })
+      .catch(error => {
+        console.error(error);
+        hideLoader();
+      });
+  </script>
+</body>
+
+</html>
