@@ -28,12 +28,13 @@
     }
 
     /* เพิ่ม margin ของไอคอนโทรศัพท์ด้านขวา */
-  .fa-phone {
-    margin-right: 5px;
-  }
-  h2 {
-    color: green;
-  }
+    .fa-phone {
+      margin-right: 5px;
+    }
+
+    h2 {
+      color: green;
+    }
 
   </style>
   
@@ -41,9 +42,11 @@
 
 <body>
   <div class="container">
-
     <h2><i class="fas fa-user-md"></i> Pharm Telemed List</h2>
-    <input type="text" id="searchBox" class="form-control" placeholder="ค้นหาจากชื่อและเบอร์โทร" oninput="search()">
+    <div class="form-group">
+      <input type="text" id="searchBox" class="form-control" placeholder="ค้นหาจากชื่อและเบอร์โทร" oninput="search()">
+      <input type="date" id="registrationDateInput" class="form-control mt-2" placeholder="ค้นหาจากวันที่ลงทะเบียน" oninput="filterByRegistrationDate()">
+    </div>
     <ul id="nameList" class="list-group mt-3"></ul>
     <div id="loader" class="loader">
       <img src="loader.gif" alt="Loading...">
@@ -70,6 +73,24 @@
         a = li[i].getElementsByTagName("a")[0];
         txtValue = a.textContent || a.innerText;
         if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          li[i].style.display = "";
+        } else {
+          li[i].style.display = "none";
+        }
+      }
+    }
+
+    function filterByRegistrationDate() {
+      var input, filter, ul, li, date, i, txtValue;
+      input = document.getElementById('registrationDateInput');
+      filter = input.value.toUpperCase();
+      ul = document.getElementById("nameList");
+      li = ul.getElementsByTagName('li');
+
+      for (i = 0; i < li.length; i++) {
+        date = li[i].querySelector(".registration-date").textContent;
+        txtValue = date.toUpperCase();
+        if (txtValue.indexOf(filter) > -1) {
           li[i].style.display = "";
         } else {
           li[i].style.display = "none";
@@ -104,15 +125,18 @@
           var clinic = document.createElement("p");
           clinic.textContent = "คลินิก: " + item.คลินิก;
 
+          var registrationDate = document.createElement("p");
+          registrationDate.className = "registration-date";
+          registrationDate.textContent = "วันที่ลงทะเบียน: " + item.วันที่ลงทะเบียน; // New column
+
           a.appendChild(icon);
           a.appendChild(namePhone);
           li.appendChild(a);
           li.appendChild(address);
           li.appendChild(clinic);
+          li.appendChild(registrationDate); // Appending the new column
           nameList.appendChild(li);
         });
-
-
 
         hideLoader();
       })
