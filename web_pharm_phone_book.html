@@ -36,8 +36,9 @@
       color: green;
     }
 
-    p{
-      margin: 10px 0 0 0;
+    .search {
+       margin: 10px 0 0 0;
+      font-weight: bold;
     }
 
   </style>
@@ -48,10 +49,10 @@
   <div class="container">
     <h2><i class="fas fa-user-md"></i> Pharm Telemed List</h2>
     <div class="form-group">
-      <p>ค้นหา</p>
+      <p class="search">ค้นหา</p>
       <input type="text" id="searchBox" class="form-control" placeholder="ค้นหาจากชื่อและเบอร์โทร" oninput="search()">
-      <p>ค้นหาจากวันที่ลงทะเบียน</p>
-      <input type="date" id="registrationDateInput" class="form-control " placeholder="ค้นหาจากวันที่ลงทะเบียน" oninput="filterByRegistrationDate()" />
+      <p class="search">ค้นหาจากวันที่ลงทะเบียน</p>
+      <input type="date" id="registrationDateInput" class="form-control mt-2" placeholder="ค้นหาจากวันที่ลงทะเบียน" oninput="filterByRegistrationDate()">
     </div>
     <ul id="nameList" class="list-group mt-3"></ul>
     <div id="loader" class="loader">
@@ -106,51 +107,51 @@
 
     // Fetch data from the API and populate the name list
     showLoader();
-    
     fetch('https://script.google.com/macros/s/AKfycbxBGJy0ui9QvP8uEap7QlS4slZpvRQrWgsy_lf1ebzgYpuBawxltth_1RWlkrfmH0mjrw/exec')
-  .then(response => response.json())
-  .then(data => {
-    var nameList = document.getElementById("nameList");
+      .then(response => response.json())
+      .then(data => {
+        var nameList = document.getElementById("nameList");
 
-    data.forEach(item => {
-      var li = document.createElement("li");
-      li.className = "list-group-item";
+        data.forEach(item => {
+          var li = document.createElement("li");
+          li.className = "list-group-item";
 
-      var a = document.createElement("a");
-      a.href = "tel:" + item.โทรศัพท์;
+          var a = document.createElement("a");
+          a.href = "tel:" + item.โทรศัพท์;
 
-      var icon = document.createElement("i");
-      icon.className = "fa fa-phone";
-      icon.setAttribute("aria-hidden", "true");
+          var icon = document.createElement("i");
+          icon.className = "fa fa-phone";
+          icon.setAttribute("aria-hidden", "true");
 
-      var namePhone = document.createElement("span");
-      namePhone.textContent = item.ชื่อสกุล + " - " + item.โทรศัพท์;
+          var namePhone = document.createElement("span");
+          namePhone.textContent = item.ชื่อสกุล + " - " + item.โทรศัพท์;
 
-      var address = document.createElement("p");
-      address.textContent = "ที่อยู่: " + item.ที่อยู่ + " " + item.ตำบล + " " + item.อำเภอ + " " + item.จังหวัด + " " + item.รหัส;
+          var address = document.createElement("p");
+          //address.textContent = "ที่อยู่: " + item.ที่อยู่;
+          address.textContent = "ที่อยู่: " + item.ที่อยู่ + " " + item.ตำบล + " " + item.อำเภอ + " " + item.จังหวัด + " " + item.รหัส;
 
-      var clinic = document.createElement("p");
-      clinic.textContent = "คลินิก: " + item.คลินิก;
+          var clinic = document.createElement("p");
+          clinic.textContent = "คลินิก: " + item.คลินิก;
 
-      var registrationDate = document.createElement("p");
-      registrationDate.textContent = "วันที่ลงทะเบียน: " + item.วันที่ลงทะเบียน;
+          var registrationDate = document.createElement("p");
+          registrationDate.className = "registration-date";
+          registrationDate.textContent = "วันที่ลงทะเบียน: " + item.วันที่ลงทะเบียน; // New column
 
-      a.appendChild(icon);
-      a.appendChild(namePhone);
-      li.appendChild(a);
-      li.appendChild(address);
-      li.appendChild(clinic);
-      li.appendChild(registrationDate);
-      nameList.appendChild(li);
-    });
+          a.appendChild(icon);
+          a.appendChild(namePhone);
+          li.appendChild(a);
+          li.appendChild(address);
+          li.appendChild(clinic);
+          li.appendChild(registrationDate); // Appending the new column
+          nameList.appendChild(li);
+        });
 
-    hideLoader();
-  })
-  .catch(error => {
-    console.error(error);
-    hideLoader();
-  });
-
+        hideLoader();
+      })
+      .catch(error => {
+        console.error(error);
+        hideLoader();
+      });
   </script>
 </body>
 
